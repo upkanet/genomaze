@@ -1,0 +1,20 @@
+.maze-table {
+	border-spacing: 0px;
+}
+
+.maze-table td {
+	height : 50px;
+	width: 50px;
+}
+
+.td-wall {
+	background-color: black;
+}
+
+.td-entrance {
+	background-color: green;
+}
+
+.td-exit {
+	background-color: red;
+}
