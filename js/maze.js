@@ -6,25 +6,42 @@ class Maze {
 		this.height = arr.length;
 	}
 
-	get exitCoords(){
-		var xe = null;
-		var ye = null;
+	find(num){
+		var xt = null;
+		var yt = null;
 
 		for(var x = 0; x < this.width; x++){
 			for(var y = 0; y < this.height; y++){
-				if(this.arr[y][x] == 3){
-					xe = x;
-					ye = y;
+				if(this.arr[y][x] == num){
+					xt = x;
+					yt = y;
 				}
 			}
 		}
-		return {"x": xe, "y": ye};
+		return {"x": xt, "y": yt};
+	}
+
+	get exitCoords(){
+		return this.find(3);
+	}
+
+	get entranceCoords(){
+		return this.find(2);
+	}
+	
+	get magnitude(){
+		return Math.pow(Math.max(this.height, this.width),2);
 	}
 
 	distanceToExit(x,y){
 		var ex = this.exitCoords;
 
 		return Math.sqrt(Math.pow(x - ex.x,2)+Math.pow(y - ex.y,2));
+	}
+
+	entranceToExit(){
+		var entrance = this.entranceCoords;
+		return this.distanceToExit(entrance.x, entrance.y);
 	}
 
 	getCellType(x,y){
@@ -73,6 +90,76 @@ class Maze {
 	draw(idMaze){
 		var html = this.html;
 		$('#'+idMaze).html(html);
+	}
+
+	tryDNA(dna){
+		var fitness = 0;
+		var x = this.entranceCoords.x;
+		var y = this.entranceCoords.y;
+		var arriving = this.endUp(x,y,dna);
+		console.log(arriving);
+
+		fitness = 1 - this.distanceToExit(arriving.x, arriving.y) / this.entranceToExit();
+		console.log(fitness);
+
+		return fitness;
+	}
+
+	endUp(x,y,dna){
+		var nc = this.nextCoords(x,y,dna[0]);
+		if(nc == null || this.getCell(nc.x, nc.y) == 0){
+			return {"x": x, "y": y};
+		}
+		else{
+			if(dna.length == 1){
+				return {"x": nc.x, "y": nc.y};
+			}
+			else{
+				dna.shift();
+				return this.endUp(nc.x, nc.y, dna);
+			}
+		}
+	}
+
+	getCell(x,y){
+		return this.arr[y][x];
+	}
+
+	nextCoords(x,y,direction){
+		switch(direction){
+			case 'N':
+				if(y == 0){
+					return null;
+				}
+				else{
+					return {"x": x, "y": y - 1}
+				}
+				break;
+			case 'S':
+				if(y == this.height - 2){
+					return null;
+				}
+				else{
+					return {"x": x, "y": y + 1}
+				}
+				break;
+			case 'W':
+				if(x == 0){
+					return null;
+				}
+				else{
+					return {"x": x - 1, "y": y}
+				}
+				break;
+			case 'E':
+				if(x == this.width - 2){
+					return null;
+				}
+				else{
+					return {"x": x + 1, "y": y}
+				}
+				break;
+		}
 	}
 
 }

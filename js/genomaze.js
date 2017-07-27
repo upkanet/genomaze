@@ -12,3 +12,7 @@ var maze = new Maze([
 $(function(){
 	maze.draw('maze');
 });
+
+var pop = new Population(maze.magnitude);
+pop.populate();
+pop.battle(maze);
