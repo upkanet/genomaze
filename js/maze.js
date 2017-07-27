@@ -77,7 +77,7 @@ class Maze {
 			for(var x = 0; x < this.width; x++){
 				tdcl = this.getCellType(x,y);
 
-				html += '<td class="td-' + tdcl + '">&nbsp;</td>';
+				html += '<td class="td-' + tdcl + '">'+x+' / '+y+'</td>';
 			}
 			html += '</tr>';
 		}
@@ -108,6 +108,7 @@ class Maze {
 	endUp(x,y,dna){
 		var nc = this.nextCoords(x,y,dna[0]);
 		if(nc == null || this.getCell(nc.x, nc.y) == 0){
+			console.log('arret');
 			return {"x": x, "y": y};
 		}
 		else{
@@ -132,15 +133,15 @@ class Maze {
 					return null;
 				}
 				else{
-					return {"x": x, "y": y - 1}
+					return {"x": x, "y": y - 1};
 				}
 				break;
 			case 'S':
-				if(y == this.height - 2){
+				if(y >= this.height - 2){
 					return null;
 				}
 				else{
-					return {"x": x, "y": y + 1}
+					return {"x": x, "y": y + 1};
 				}
 				break;
 			case 'W':
@@ -148,15 +149,15 @@ class Maze {
 					return null;
 				}
 				else{
-					return {"x": x - 1, "y": y}
+					return {"x": x - 1, "y": y};
 				}
 				break;
 			case 'E':
-				if(x == this.width - 2){
+				if(x >= this.width - 2){
 					return null;
 				}
 				else{
-					return {"x": x + 1, "y": y}
+					return {"x": x + 1, "y": y};
 				}
 				break;
 		}

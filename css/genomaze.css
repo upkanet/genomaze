@@ -1,4 +1,5 @@
 .maze-table {
+	text-align:center;
 	border-spacing: 0px;
 }
 
@@ -8,6 +9,7 @@
 }
 
 .td-wall {
+	color:white;
 	background-color: black;
 }
 
