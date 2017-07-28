@@ -142,4 +142,28 @@ class Population{
 			this.individuals[i].mutate(this.mutation_rate);
 		}
 	}
+
+	histoQuarter(){
+		var fitlist = this.fit;
+		var histo = [
+		['First',0,0],
+		['Second',0,0],
+		['Third',0,0],
+		['Last',0,0]
+		];
+
+		for(var i = 0; i < fitlist.length; i++){
+			histo[Math.floor(fitlist[i] * 4)][1] += 1;
+		}
+		/*var histo = [
+        ['City', '2010 Population', '2000 Population'],
+        ['New York City, NY', 8175000, 8008000],
+        ['Los Angeles, CA', 3792000, 3694000],
+        ['Chicago, IL', 2695000, 2896000],
+        ['Houston, TX', 2099000, 1953000],
+        ['Philadelphia, PA', 1526000, 1517000]
+      ];*/
+
+		return histo;
+	}
 }
