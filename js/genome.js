@@ -12,18 +12,26 @@ class Genome {
 
 	rdmDNA(){
 		var new_dna = [];
-		var coin = 0;
 		for(var i = 0; i < this.size; i++){
-			coin = Math.random() * 4;
-			new_dna.push(this.direction(coin));
+			new_dna.push(this.rdmDir());
 		}
 
 		return new_dna;
 	}
 
-	direction(coin){
+	mutate(mrate){
+		for(var i = 0; i < this.size; i++){
+			if(Math.random() < mrate){
+				this.dna[i] = this.rdmDir();
+			}
+		}
+	}
+
+	rdmDir(){
+		var r = Math.floor(4 * Math.random());
+		
 		var dir = '';
-		switch(Math.floor(coin)){
+		switch(r){
 			case 0:
 				dir = 'N';
 				break;

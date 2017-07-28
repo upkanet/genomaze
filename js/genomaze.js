@@ -9,11 +9,27 @@ var maze = new Maze([
 		[0,0,0,0,0,0,0,0,0,0,0]
 	]);
 
-$(function(){
-	maze.draw('maze');
-});
-
 var pop = new Population(maze.magnitude);
 pop.populate();
-pop.battle(maze);
-//maze.tryDNA(['S']);
+var i = 0;
+
+$(function(){
+	maze.draw('maze');
+	$('#b_nextgen').click(runNextGen);
+});
+
+function runNextGen(){
+	maze.clear();
+	console.log('Gen #'+i);
+	pop.battle(maze);
+	pop.die();
+	pop.mate();
+	pop.mutate();
+	
+	//results
+	console.log(pop.size);
+	console.log(pop.best.fitness);
+	console.log(pop.avg_fit);
+	maze.printIndiv(pop.best);
+	i++;
+}

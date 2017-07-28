@@ -30,7 +30,7 @@ class Maze {
 	}
 	
 	get magnitude(){
-		return Math.pow(Math.max(this.height, this.width),2);
+		return this.height * this.width;
 	}
 
 	distanceToExit(x,y){
@@ -77,7 +77,7 @@ class Maze {
 			for(var x = 0; x < this.width; x++){
 				tdcl = this.getCellType(x,y);
 
-				html += '<td class="td-' + tdcl + '">'+x+' / '+y+'</td>';
+				html += '<td id="cell-' + x + '-' + y + '" class="td-' + tdcl + '">'+x+' / '+y+'</td>';
 			}
 			html += '</tr>';
 		}
@@ -103,7 +103,11 @@ class Maze {
 		return fitness;
 	}
 
-	endUp(x,y,dna){
+	endUp(x,y,dna,draw = false){
+		if(draw){
+			this.colorCell(x,y);
+		}
+
 		var nc = this.nextCoords(x,y,dna[0]);
 		if(nc == null || this.getCell(nc.x, nc.y) == 0){
 			return {"x": x, "y": y};
@@ -115,7 +119,7 @@ class Maze {
 			else{
 				var n_dna = dna.slice();
 				n_dna.shift();
-				return this.endUp(nc.x, nc.y, n_dna);
+				return this.endUp(nc.x, nc.y, n_dna, draw);
 			}
 		}
 	}
@@ -158,6 +162,29 @@ class Maze {
 					return {"x": x + 1, "y": y};
 				}
 				break;
+		}
+	}
+
+	printIndiv(indiv){
+		console.log('Printed indiv fitness : '+indiv.fitness);
+		console.log(JSON.stringify(indiv.genome.dna));
+		var d = indiv.genome.dna;
+		var x = this.entranceCoords.x;
+		var y = this.entranceCoords.y;
+		var arriving = this.endUp(x,y,d, true);
+
+		return arriving;
+	}
+
+	colorCell(x,y){
+		$('#cell-'+x+'-'+y).addClass('snakecell');
+	}
+
+	clear(){
+		for(var x = 0; x < this.width; x++){
+			for(var y = 0; y < this.height; y++){
+				$('#cell-'+x+'-'+y).removeClass('snakecell');
+			}
 		}
 	}
 

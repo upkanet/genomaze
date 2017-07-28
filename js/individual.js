@@ -1,7 +1,11 @@
 class Individual{
-	constructor(gensize = null){
+	constructor(gensize = null, genome = null){
 		this.gensize = gensize;
-		this.genome = this.rdmGen(this.gensize);
+		if(genome == null){
+			this.genome = this.rdmGen(this.gensize);
+		} else{
+			this.genome = genome;
+		}
 		this.fitness = 0;
 	}
 
@@ -12,5 +16,9 @@ class Individual{
 
 	tryMaze(maze){
 		this.fitness = maze.tryDNA(this.genome.dna);
+	}
+
+	mutate(mrate){
+		this.genome.mutate(mrate);
 	}
 }
