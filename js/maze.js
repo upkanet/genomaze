@@ -97,10 +97,8 @@ class Maze {
 		var x = this.entranceCoords.x;
 		var y = this.entranceCoords.y;
 		var arriving = this.endUp(x,y,dna);
-		console.log(arriving);
 
 		fitness = 1 - this.distanceToExit(arriving.x, arriving.y) / this.entranceToExit();
-		console.log(fitness);
 
 		return fitness;
 	}
@@ -108,7 +106,6 @@ class Maze {
 	endUp(x,y,dna){
 		var nc = this.nextCoords(x,y,dna[0]);
 		if(nc == null || this.getCell(nc.x, nc.y) == 0){
-			console.log('arret');
 			return {"x": x, "y": y};
 		}
 		else{
@@ -116,8 +113,9 @@ class Maze {
 				return {"x": nc.x, "y": nc.y};
 			}
 			else{
-				dna.shift();
-				return this.endUp(nc.x, nc.y, dna);
+				var n_dna = dna.slice();
+				n_dna.shift();
+				return this.endUp(nc.x, nc.y, n_dna);
 			}
 		}
 	}

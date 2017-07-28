@@ -16,3 +16,4 @@ $(function(){
 var pop = new Population(maze.magnitude);
 pop.populate();
 pop.battle(maze);
+//maze.tryDNA(['S']);
