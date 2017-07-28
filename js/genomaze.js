@@ -20,6 +20,7 @@ $(function(){
 
 function runNextGen(){
 	maze.clear();
+	console.clear();
 	console.log('Gen #'+i);
 	pop.battle(maze);
 	pop.die();

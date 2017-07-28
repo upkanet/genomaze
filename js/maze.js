@@ -96,14 +96,15 @@ class Maze {
 		var fitness = 0;
 		var x = this.entranceCoords.x;
 		var y = this.entranceCoords.y;
-		var arriving = this.endUp(x,y,dna);
+		var path = [{"x": x, "y": y}];
+		var arriving = this.endUp(path,dna);
 
 		fitness = 1 - this.distanceToExit(arriving.x, arriving.y) / this.entranceToExit();
 
 		return fitness;
 	}
 
-	endUp(x,y,dna,draw = false){
+	/*endUp(x,y,dna,draw = false){
 		if(draw){
 			this.colorCell(x,y);
 		}
@@ -122,6 +123,43 @@ class Maze {
 				return this.endUp(nc.x, nc.y, n_dna, draw);
 			}
 		}
+	}*/
+
+	endUp(path,dna,draw = false){
+		var lastCoords = path[path.length - 1];
+		var x = lastCoords['x'];
+		var y = lastCoords['y'];
+
+		if(draw){
+			this.colorCell(x,y);
+		}
+
+		var nc = this.nextCoords(x,y,dna[0]);
+		if(nc == null || this.getCell(nc.x, nc.y) == 0 || this.isOnPreviousPath(path, nc.x, nc.y)){
+			return {"x": x, "y": y};
+		}
+		else{
+			if(dna.length == 1){
+				return {"x": nc.x, "y": nc.y};
+			}
+			else{
+				var n_dna = dna.slice();
+				n_dna.shift();
+				path.push(nc);
+				return this.endUp(path, n_dna, draw);
+			}
+		}
+	}
+
+	isOnPreviousPath(path, nx, ny){
+		var v = false;
+		for(var i = 0; i < path.length; i++){
+			if(path[i].x == nx && path[i].y == ny){
+				v = true;
+			}
+		}
+
+		return v;
 	}
 
 	getCell(x,y){
@@ -171,7 +209,8 @@ class Maze {
 		var d = indiv.genome.dna;
 		var x = this.entranceCoords.x;
 		var y = this.entranceCoords.y;
-		var arriving = this.endUp(x,y,d, true);
+		var path = [{"x": x, "y": y}];
+		var arriving = this.endUp(path,d, true);
 
 		return arriving;
 	}
