@@ -23,14 +23,23 @@ function runNextGen(){
 	console.clear();
 	console.log('Gen #'+i);
 	pop.battle(maze);
-	pop.die();
-	pop.mate();
-	pop.mutate();
 	
 	//results
 	console.log(pop.size);
-	console.log(pop.best.fitness);
 	console.log(pop.avg_fit);
-	maze.printIndiv(pop.best);
+
+	//best one
+	console.log('/// Best One Scorecard');
+	var b = pop.best;
+	console.log(b.fitness);
+	console.log(JSON.stringify(b.genome.dna));
+	console.log(b.arriving);
+	console.log(maze.distanceToExit(b.arriving.x, b.arriving.y));
+	console.log(maze.entranceToExit());
+	maze.printIndiv(b);
 	i++;
+	
+	pop.die();
+	pop.mate();
+	pop.mutate();
 }

@@ -30,7 +30,7 @@ class Maze {
 	}
 	
 	get magnitude(){
-		return this.height * this.width;
+		return (this.height - 2) * (this.width - 2);
 	}
 
 	distanceToExit(x,y){
@@ -94,60 +94,43 @@ class Maze {
 
 	tryDNA(dna){
 		var fitness = 0;
-		var x = this.entranceCoords.x;
-		var y = this.entranceCoords.y;
-		var path = [{"x": x, "y": y}];
+		var path = [this.entranceCoords];
 		var arriving = this.endUp(path,dna);
+		var fitness = this.assessFitness(arriving);
 
-		fitness = 1 - this.distanceToExit(arriving.x, arriving.y) / this.entranceToExit();
-
-		return fitness;
+		return {'fitness': fitness,'arriving': arriving};
 	}
 
-	/*endUp(x,y,dna,draw = false){
-		if(draw){
-			this.colorCell(x,y);
-		}
-
-		var nc = this.nextCoords(x,y,dna[0]);
-		if(nc == null || this.getCell(nc.x, nc.y) == 0){
-			return {"x": x, "y": y};
-		}
-		else{
-			if(dna.length == 1){
-				return {"x": nc.x, "y": nc.y};
-			}
-			else{
-				var n_dna = dna.slice();
-				n_dna.shift();
-				return this.endUp(nc.x, nc.y, n_dna, draw);
-			}
-		}
-	}*/
+	assessFitness(arriving){
+		return 1 - this.distanceToExit(arriving.x, arriving.y) / this.entranceToExit();
+	}
 
 	endUp(path,dna,draw = false){
-		var lastCoords = path[path.length - 1];
-		var x = lastCoords['x'];
-		var y = lastCoords['y'];
+		var currentCell = path[path.length - 1];
+		var x = currentCell.x;
+		var y = currentCell.y;
 
 		if(draw){
 			this.colorCell(x,y);
 		}
 
-		var nc = this.nextCoords(x,y,dna[0]);
-		if(nc == null || this.getCell(nc.x, nc.y) == 0 || this.isOnPreviousPath(path, nc.x, nc.y)){
-			return {"x": x, "y": y};
+		//console.log('current cell');
+		//console.log(currentCell);
+		//console.log(dna);
+
+		var nc = this.nextCell(x,y,dna[0]);
+		//console.log('next cell');
+		//console.log(nc);
+		if(!this.isCellPracticable(nc.x, nc.y) || this.isOnPreviousPath(path, nc.x, nc.y) || dna.length == 0){
+			return currentCell;
 		}
 		else{
-			if(dna.length == 1){
-				return {"x": nc.x, "y": nc.y};
-			}
-			else{
-				var n_dna = dna.slice();
-				n_dna.shift();
-				path.push(nc);
-				return this.endUp(path, n_dna, draw);
-			}
+			//Remove DNA first direction
+			var n_dna = dna.slice();
+			n_dna.shift();
+			//Add next point to the path
+			path.push(nc);
+			return this.endUp(path, n_dna, draw);
 		}
 	}
 
@@ -162,57 +145,31 @@ class Maze {
 		return v;
 	}
 
-	getCell(x,y){
-		return this.arr[y][x];
+	isCellPracticable(x,y){
+		return (this.getCellType(x,y) != 'wall' && x < this.width && y < this.height);
 	}
 
-	nextCoords(x,y,direction){
+	nextCell(x,y,direction){
 		switch(direction){
 			case 'N':
-				if(y == 0){
-					return null;
-				}
-				else{
-					return {"x": x, "y": y - 1};
-				}
+				return {"x": x, "y": y - 1};
 				break;
 			case 'S':
-				if(y >= this.height - 2){
-					return null;
-				}
-				else{
-					return {"x": x, "y": y + 1};
-				}
+				return {"x": x, "y": y + 1};
 				break;
 			case 'W':
-				if(x == 0){
-					return null;
-				}
-				else{
-					return {"x": x - 1, "y": y};
-				}
+				return {"x": x - 1, "y": y};
 				break;
 			case 'E':
-				if(x >= this.width - 2){
-					return null;
-				}
-				else{
-					return {"x": x + 1, "y": y};
-				}
+				return {"x": x + 1, "y": y};
 				break;
 		}
 	}
 
 	printIndiv(indiv){
-		console.log('Printed indiv fitness : '+indiv.fitness);
-		console.log(JSON.stringify(indiv.genome.dna));
 		var d = indiv.genome.dna;
-		var x = this.entranceCoords.x;
-		var y = this.entranceCoords.y;
-		var path = [{"x": x, "y": y}];
+		var path = [this.entranceCoords];
 		var arriving = this.endUp(path,d, true);
-
-		return arriving;
 	}
 
 	colorCell(x,y){

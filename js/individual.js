@@ -7,6 +7,7 @@ class Individual{
 			this.genome = genome;
 		}
 		this.fitness = 0;
+		this.arriving = null;
 	}
 
 	rdmGen(size = 15){
@@ -15,7 +16,9 @@ class Individual{
 	}
 
 	tryMaze(maze){
-		this.fitness = maze.tryDNA(this.genome.dna);
+		var maze_result = maze.tryDNA(this.genome.dna);
+		this.fitness = maze_result.fitness;
+		this.arriving = maze_result.arriving;
 	}
 
 	mutate(mrate){

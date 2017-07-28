@@ -65,7 +65,7 @@ class Population{
 	die(){
 		var n_indivs = this.individuals.slice();
 		for(var i = 0; i < this.size; i++){
-			if(this.individuals[i].fitness < 2 * Math.random() * this.death_rate * this.best.fitness){
+			if(this.individuals[i].fitness < Math.random() * this.death_rate * this.best.fitness * Math.log10(this.size)){
 				delete n_indivs.splice(i,1);
 			}
 		}
@@ -91,7 +91,7 @@ class Population{
 	}
 
 	findMate(i){
-		if(this.individuals[i].fitness > Math.random()){
+		if(this.individuals[i].fitness > 1.5 * Math.random()){
 			return i;
 		}
 		else{
