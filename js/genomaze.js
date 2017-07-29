@@ -16,7 +16,7 @@ var i = 0;
 $(function(){
 	maze.draw('maze');
 	$('#b_nextgen').click(runNextGen);
-	$('#b_chart').click(drawBasic);
+	$('#b_chart').click(drawQuarters);
 
 });
 
@@ -33,12 +33,12 @@ function runNextGen(){
 	//best one
 	console.log('/// Best One Scorecard');
 	var b = pop.best;
-	console.log(b.fitness);
+	console.log('Score :'+b.fitness);
 	console.log(JSON.stringify(b.genome.dna));
 	console.log(b.arriving);
-	console.log(maze.distanceToExit(b.arriving.x, b.arriving.y));
-	console.log(maze.entranceToExit());
+	console.log('Distance to exit '+maze.distanceToExit(b.arriving.x, b.arriving.y));
 	maze.printIndiv(b);
+	drawQuarters();
 	i++;
 	
 	pop.die();
@@ -47,12 +47,11 @@ function runNextGen(){
 }
 
 google.charts.load('current', {packages: ['corechart', 'bar']});
-//google.charts.setOnLoadCallback(drawBasic);
 
-function drawBasic() {
+function drawQuarters() {
 	var arr = pop.histoQuarter();
-	console.log(arr);
-	var data = google.visualization.arrayToDataTable(arr);
+	console.log(JSON.stringify(arr));
+	/*var data = google.visualization.arrayToDataTable(arr);
 
       var materialOptions = {
         chart: {
@@ -60,5 +59,5 @@ function drawBasic() {
         }
       };
       var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-      materialChart.draw(data, materialOptions);
+      materialChart.draw(data, materialOptions);*/
 }

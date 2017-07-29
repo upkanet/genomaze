@@ -65,7 +65,7 @@ class Population{
 	die(){
 		var n_indivs = this.individuals.slice();
 		for(var i = 0; i < this.size; i++){
-			if(this.individuals[i].fitness < Math.random() * this.death_rate * this.best.fitness * Math.log10(this.size)){
+			if(this.individuals[i].fitness < Math.random() * this.death_rate * Math.log10(this.size)){
 				delete n_indivs.splice(i,1);
 			}
 		}
@@ -146,13 +146,14 @@ class Population{
 	histoQuarter(){
 		var fitlist = this.fit;
 		var histo = [
-		['First',0,0],
-		['Second',0,0],
-		['Third',0,0],
-		['Last',0,0]
+		['First',0],
+		['Second',0],
+		['Third',0],
+		['Last',0]
 		];
 
 		for(var i = 0; i < fitlist.length; i++){
+			//console.log(fitlist[i] + ' : quarter #' +Math.floor(fitlist[i] * 4));
 			histo[Math.floor(fitlist[i] * 4)][1] += 1;
 		}
 		/*var histo = [
