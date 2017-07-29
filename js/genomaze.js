@@ -17,47 +17,68 @@ $(function(){
 	maze.draw('maze');
 	$('#b_nextgen').click(runNextGen);
 	$('#b_chart').click(drawQuarters);
+	$(document).keypress(function(e){if(e.keyCode == 32) {runNextGen()}});
 
 });
 
 function runNextGen(){
-	maze.clear();
-	console.clear();
-	console.log('Gen #'+i);
-	pop.battle(maze);
-	
-	//results
-	console.log(pop.size);
-	console.log(pop.avg_fit);
+	if(!maze.solved){
+		maze.clear();
+		console.clear();
+		console.log('Gen #'+pop.generation);
+		pop.battle(maze);
+		
+		//results
+		console.log('/// Population Scorecard');
+		console.log('Size : ' + pop.size);
+		console.log('Avg Score : ' + pop.avg_fit);
 
-	//best one
-	console.log('/// Best One Scorecard');
-	var b = pop.best;
-	console.log('Score :'+b.fitness);
-	console.log(JSON.stringify(b.genome.dna));
-	console.log(b.arriving);
-	console.log('Distance to exit '+maze.distanceToExit(b.arriving.x, b.arriving.y));
-	maze.printIndiv(b);
-	drawQuarters();
-	i++;
-	
-	pop.die();
-	pop.mate();
-	pop.mutate();
+		//best one
+		console.log('/// Best One Scorecard');
+		var b = pop.best;
+		console.log('Score : '+b.fitness);
+		console.log(JSON.stringify(b.genome.dna));
+		console.log(b.arriving);
+		maze.printIndiv(b);
+		drawQuarters();
+		maze.solved = (b.fitness == 1);
+		
+		//Pop living its life
+		pop.die();
+		pop.mate();
+		pop.mutate();
+	}
+	else{
+		console.clear();
+		console.log('Maze Solved');
+		console.log('Gen #'+pop.generation);
+		//results
+		console.log('/// Population Scorecard');
+		console.log('Size : ' + pop.size);
+		console.log('Avg Score : ' + pop.avg_fit);
+
+		//best one
+		console.log('/// Best One Scorecard');
+		var b = pop.best;
+		console.log('Score : '+b.fitness);
+		console.log(JSON.stringify(b.genome.dna));
+		console.log(b.arriving);
+		maze.printIndiv(b);
+		drawQuarters();
+	}
 }
 
 google.charts.load('current', {packages: ['corechart', 'bar']});
 
 function drawQuarters() {
 	var arr = pop.histoQuarter();
-	console.log(JSON.stringify(arr));
-	/*var data = google.visualization.arrayToDataTable(arr);
-
-      var materialOptions = {
-        chart: {
-          title: 'Population of Largest U.S. Cities'
-        }
-      };
-      var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-      materialChart.draw(data, materialOptions);*/
+	console.log(arr);
+	var data = google.visualization.arrayToDataTable(arr);
+	var materialOptions = {
+	chart: {
+	  title: 'Population Percentiles'
+	}
+	};
+	var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
+	materialChart.draw(data, materialOptions);
 }

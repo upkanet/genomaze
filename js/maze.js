@@ -4,6 +4,7 @@ class Maze {
 		this.arr = arr;
 		this.width = arr[0].length;
 		this.height = arr.length;
+		this.solved = 0;
 	}
 
 	find(num){
@@ -77,7 +78,7 @@ class Maze {
 			for(var x = 0; x < this.width; x++){
 				tdcl = this.getCellType(x,y);
 
-				html += '<td id="cell-' + x + '-' + y + '" class="td-' + tdcl + '">'+x+' / '+y+'</td>';
+				html += '<td id="cell-' + x + '-' + y + '" class="td-' + tdcl + '">&nbsp;</td>';
 			}
 			html += '</tr>';
 		}

@@ -65,13 +65,17 @@ class Population{
 	die(){
 		var n_indivs = this.individuals.slice();
 		for(var i = 0; i < this.size; i++){
-			if(this.individuals[i].fitness < Math.random() * this.death_rate * Math.log10(this.size)){
+			if(this.isKilled(this.individuals[i])){
 				delete n_indivs.splice(i,1);
 			}
 		}
 
 		this.individuals = n_indivs;
 		this.generation += 1;
+	}
+
+	isKilled(indiv){
+		return (indiv.fitness < this.death_rate * this.best.fitness || indiv.fitness < 1 - (Math.random() * Math.random()));
 	}
 
 	mate(){
@@ -91,7 +95,7 @@ class Population{
 	}
 
 	findMate(i){
-		if(this.individuals[i].fitness > 1.5 * Math.random()){
+		if(this.individuals[i].fitness > 2 * Math.random()){
 			return i;
 		}
 		else{
@@ -145,25 +149,21 @@ class Population{
 
 	histoQuarter(){
 		var fitlist = this.fit;
-		var histo = [
-		['First',0],
-		['Second',0],
-		['Third',0],
-		['Last',0]
-		];
+		var parts = 10;
+		var histo = [['Quarter','Population']];
+		for(var i = 0; i < parts; i++){
+			histo.push(['Q'+(i+1),0]);
+		}
+		histo.push(['Solved',0]);
 
 		for(var i = 0; i < fitlist.length; i++){
-			//console.log(fitlist[i] + ' : quarter #' +Math.floor(fitlist[i] * 4));
-			histo[Math.floor(fitlist[i] * 4)][1] += 1;
+			if(fitlist[i] < 1){
+				histo[Math.floor(fitlist[i] * parts) + 1][1] += 1;
+			}
+			else{
+				histo[parts + 1][1] +=1;
+			}
 		}
-		/*var histo = [
-        ['City', '2010 Population', '2000 Population'],
-        ['New York City, NY', 8175000, 8008000],
-        ['Los Angeles, CA', 3792000, 3694000],
-        ['Chicago, IL', 2695000, 2896000],
-        ['Houston, TX', 2099000, 1953000],
-        ['Philadelphia, PA', 1526000, 1517000]
-      ];*/
 
 		return histo;
 	}
